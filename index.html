@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Music Player</title>
+    <style>
+        body { background: #121212; color: white; font-family: sans-serif; text-align: center; padding: 50px; }
+        h1 { color: #ff4d4d; }
+        .player-container { margin-top: 20px; }
+        audio { filter: invert(100%); width: 80%; max-width: 500px; }
+    </style>
+</head>
+<body>
+
+    <h1>Trình Phát Nhạc Trực Tuyến</h1>
+    
+    <div class="player-container">
+        <audio id="myAudio" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" controls></audio>
+    </div>
+
+    <script>
+        const audio = document.getElementById('myAudio');
+
+        // Hàm cập nhật Metadata khi nhạc bắt đầu phát
+        function updateMediaSession() {
+            if ('mediaSession' in navigator) {
+                navigator.mediaSession.metadata = new MediaMetadata({
+                    title: 'Bản Nhạc Của Tôi',
+                    artist: 'Nghệ Sĩ ABC',
+                    album: 'Album Demo',
+                    artwork: [
+                        { src: 'https://via.placeholder.com/512', sizes: '512x512', type: 'image/png' }
+                    ]
+                });
+
+                // Gán các sự kiện điều khiển từ bên ngoài (màn hình khóa)
+                navigator.mediaSession.setActionHandler('play', () => {
+                    audio.play();
+                });
+
+                navigator.mediaSession.setActionHandler('pause', () => {
+                    audio.pause();
+                });
+
+                navigator.mediaSession.setActionHandler('seekbackward', () => {
+                    audio.currentTime = Math.max(audio.currentTime - 10, 0);
+                });
+
+                navigator.mediaSession.setActionHandler('seekforward', () => {
+                    audio.currentTime = Math.min(audio.currentTime + 10, audio.duration);
+                });
+            }
+        }
+
+        // Kích hoạt khi người dùng nhấn Play
+        audio.addEventListener('play', () => {
+            updateMediaSession();
+        });
+    </script>
+</body>
+</html>
